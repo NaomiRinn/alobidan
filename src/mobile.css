@@ -1,0 +1,155 @@
+/* =========================================
+   RESPONSIVE (MOBILE & TABLET)
+   ========================================= */
+
+/* TABLET (Max Width: 1024px) */
+@media screen and (max-width: 1024px) {
+  /* Common Grids */
+  .stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .doctors-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .services-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .articles-preview-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .articles-grid { grid-template-columns: repeat(2, 1fr) !important; }
+
+  /* Hero */
+  .hero-visual { display: none !important; }
+  .hero-content {
+    margin: 0 auto !important;
+    text-align: center;
+    max-width: 800px !important;
+  }
+  .hero-trust { justify-content: center; }
+  .hero-cta { justify-content: center; }
+
+  /* Doctor Detail */
+  .detail-layout { grid-template-columns: 1fr; gap: 20px; }
+  .booking-sidebar { 
+    position: static; 
+    margin-top: 20px; 
+  }
+  .doctor-detail-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .doctor-detail-badges {
+    justify-content: center;
+  }
+  .doctor-detail-stats {
+    justify-content: center;
+  }
+
+  /* Article Detail */
+  .article-detail-layout {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+/* MOBILE (Max Width: 768px) */
+@media screen and (max-width: 768px) {
+  /* Navbar & Navigation */
+  .navbar-links { display: none !important; }
+  .auth-buttons { display: none !important; }
+  .hamburger { display: flex !important; margin-left: 10px; }
+  
+  .user-menu .user-name { display: none; }
+  
+  /* Hero Section */
+  .hero-section { min-height: auto; padding: 40px 20px; }
+  .hero-title { font-size: 32px !important; }
+  .hero-subtitle { font-size: 15px !important; }
+  .hero-cta { flex-direction: column; width: 100%; gap: 12px; }
+  .btn-hero-primary, .btn-hero-secondary { width: 100%; justify-content: center; }
+  .hero-trust { flex-direction: column; align-items: center; gap: 10px; font-size: 13px; }
+
+  /* Common Grids to 1 Column */
+  .stats-grid { grid-template-columns: 1fr !important; }
+  .services-grid { grid-template-columns: 1fr !important; }
+  .doctors-grid { grid-template-columns: 1fr !important; }
+  .articles-preview-grid { grid-template-columns: 1fr !important; }
+  .articles-grid { grid-template-columns: 1fr !important; }
+  
+  /* Headers & Spacing */
+  .section-title { font-size: 28px !important; }
+  .home-page { gap: 40px !important; }
+
+  /* Testimonials */
+  .testimonials-wrapper { padding: 30px !important; }
+  .testimonial-text { font-size: 16px !important; }
+
+  /* CTA Banner */
+  .cta-content { padding: 40px 20px !important; }
+  .cta-content h2 { font-size: 26px !important; }
+  .cta-buttons { flex-direction: column; width: 100%; gap: 12px; }
+  .btn-cta-primary, .btn-cta-secondary { width: 100%; }
+
+  /* Search & Filter Component */
+  .filter-row { flex-direction: column; align-items: stretch; }
+  .filter-group { width: 100%; }
+
+  /* Doctor Detail Specifics */
+  .detail-tabs { flex-direction: column; }
+  .detail-tab { border-bottom: 1px solid var(--border); border-left: 3px solid transparent; text-align: left; }
+  .detail-tab.active { border-bottom-color: var(--border); border-left-color: var(--primary); }
+  .schedule-days { grid-template-columns: 1fr; }
+  .doctor-detail-stats { flex-direction: column; gap: 20px; align-items: center; }
+
+  /* Article Specifics */
+  .featured-article { flex-direction: column; }
+  .feat-thumb { width: 100%; height: 200px; }
+  .feat-body { padding: 20px; }
+  .feat-title { font-size: 22px !important; }
+  .article-header { padding: 30px 20px !important; }
+  .article-detail-title { font-size: 24px !important; }
+  .article-detail-meta { flex-direction: column; gap: 16px; }
+
+  /* Symptom Checker Specifics */
+  .symptom-stepper { flex-direction: column; gap: 20px; align-items: flex-start; }
+  .step-line {
+    position: absolute;
+    left: 20px !important;
+    top: 40px !important;
+    height: 100% !important;
+    width: 2px !important;
+  }
+  .symptoms-grid { grid-template-columns: 1fr; }
+  .step-actions { flex-direction: column; gap: 12px; }
+  .step-actions button { width: 100%; }
+  
+  .result-header { flex-direction: column; gap: 12px; align-items: flex-start !important; }
+  .result-actions { flex-direction: column-reverse; gap: 16px; align-items: stretch !important; text-align: center; }
+
+  /* Chat Specifics */
+  .chat-page { flex-direction: column; height: calc(100vh - 70px); }
+  .chat-sidebar { width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
+  .online-doctors-list { display: flex; overflow-x: auto; padding: 10px; gap: 10px; }
+  .doctor-chat-item { flex-shrink: 0; flex-direction: column; text-align: center; min-width: 100px; margin-bottom: 0; }
+  .doctor-chat-item.active { background: transparent !important; }
+  .doctor-chat-item .chat-doc-info p { display: none; }
+  .doctor-chat-item .online-label { display: none; }
+  .chat-tips { display: none; }
+
+  /* Auth Pages */
+  .auth-container { padding: 20px; }
+  .form-row-2 { grid-template-columns: 1fr; }
+  .social-login { flex-direction: column; }
+
+  /* Bookings */
+  .booking-item-details { grid-template-columns: 1fr !important; }
+  .booking-item-header { flex-direction: column; gap: 16px; align-items: flex-start !important; }
+  .booking-item-actions { flex-direction: column; }
+  .btn-cancel-booking { margin-left: 0 !important; width: 100%; }
+  .btn-reschedule { width: 100%; }
+
+  /* Footer */
+  .footer-grid { grid-template-columns: 1fr !important; }
+  .footer { padding-top: 50px; }
+}
+
+/* Extra Small Mobile */
+@media screen and (max-width: 480px) {
+  .page-title { font-size: 24px !important; line-height: 1.3; }
+  .doctor-card-footer { flex-direction: column; align-items: stretch; gap: 16px; }
+  .doctor-price { align-items: flex-start; }
+}

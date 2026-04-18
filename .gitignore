@@ -1,0 +1,34 @@
+# Dependencies
+node_modules
+/server/node_modules
+
+# Production
+dist
+/server/dist
+.vercel
+
+# Environment Variables
+.env
+.env.local
+.env.*.local
+/server/.env
+
+# Prisma
+/server/prisma/generated
+/server/prisma/dev.db
+/server/prisma/dev.db-journal
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Editor
+.vscode/
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
