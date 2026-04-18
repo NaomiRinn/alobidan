@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { AuthProvider } from './context/AuthContext';
-import { AppProvider } from './context/AppContext';
+import { AuthProvider } from './context/AuthContext.jsx';
+import { AppProvider } from './context/AppContext.jsx';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
