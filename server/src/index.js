@@ -10,9 +10,12 @@ const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 const app = express();
 
+// Trust Railway reverse proxy (enables correct protocol detection via X-Forwarded-Proto)
+app.set('trust proxy', 1);
+
 // Middlewares
 app.use(cors({
-  origin: process.env.FRONTEND_URL || '*',
+  origin: ['https://alobidan.up.railway.app', 'http://localhost:3000'],
   credentials: true
 }));
 app.use(express.json());
@@ -234,7 +237,7 @@ app.delete('/api/bookings/:id', async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => {
   console.log(`Server AloBidan is running on port ${PORT}`);
