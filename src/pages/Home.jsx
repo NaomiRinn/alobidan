@@ -135,10 +135,10 @@ export default function Home({ setCurrentPage, setSelectedDoctor }) {
         <div className="hero-visual">
           <div className="hero-card-container">
             <div className="floating-card card-1">
-              <img src="/eli.png" alt="Bidan Eli" className="floating-photo" style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} />
-              <div>
-                <strong>Eli Hidayati S.Keb</strong>
-                <p>Praktek Mandiri Bidan</p>
+              <img src="/eli.png" alt="Bidan Eli" className="floating-photo" style={{ width: '100px', height: '100px', borderRadius: '50%', objectFit: 'cover', flexShrink: 0, border: '4px solid white', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} />
+              <div style={{ flex: 1 }}>
+                <strong style={{ fontSize: '16px' }}>Eli Hidayati S.Keb</strong>
+                <p style={{ margin: 0 }}>Praktek Mandiri Bidan</p>
               </div>
               <span className="available-tag">Online</span>
             </div>
