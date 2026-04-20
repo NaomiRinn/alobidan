@@ -49,7 +49,7 @@ export default function AdminDashboard({ setCurrentPage }) {
 
       <div className="container" style={{ marginTop: '2rem' }}>
         {/* Quick Stats & Clinic Control */}
-        <div className="admin-dashboard-stats" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
+        <div className="admin-dashboard-stats">
           
           <div className="stat-card" style={{ background: '#fff', padding: '1.5rem', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}>
             <h3 style={{ fontSize: '0.875rem', color: '#64748b' }}>Pengaturan Klinik</h3>
@@ -120,18 +120,18 @@ export default function AdminDashboard({ setCurrentPage }) {
                   <tbody>
                     {[...bookings].reverse().map(b => (
                       <tr key={b.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                        <td style={{ padding: '1rem' }}>
+                        <td style={{ padding: '1rem' }} data-label="Waktu">
                           <div style={{ fontWeight: '600', color: '#0f172a' }}>{new Date(b.date).toLocaleDateString('id-ID')}</div>
                           <div style={{ fontSize: '0.875rem', color: '#64748b' }}>{b.time}</div>
                         </td>
-                        <td style={{ padding: '1rem' }}>
+                        <td style={{ padding: '1rem' }} data-label="Pasien">
                           <div style={{ fontWeight: '500', color: '#0f172a' }}>{b.patientName || b.patientPhone}</div>
                           {b.patientPhone && <div style={{ fontSize: '0.75rem', color: '#64748b' }}>{b.patientPhone}</div>}
                         </td>
-                        <td style={{ padding: '1rem' }}>
+                        <td style={{ padding: '1rem' }} data-label="Layanan">
                           <span style={{ fontSize: '0.875rem', color: '#0f172a' }}>{b.doctorName}</span>
                         </td>
-                        <td style={{ padding: '1rem' }}>
+                        <td style={{ padding: '1rem' }} data-label="Status">
                           <span style={{ 
                             padding: '0.25rem 0.75rem', 
                             borderRadius: '1rem', 
@@ -143,7 +143,7 @@ export default function AdminDashboard({ setCurrentPage }) {
                             {b.status.toUpperCase()}
                           </span>
                         </td>
-                        <td style={{ padding: '1rem' }}>
+                        <td style={{ padding: '1rem' }} data-label="Aksi">
                           <select 
                             value={b.status}
                             onChange={(e) => updateBookingStatus(b.id, e.target.value)}

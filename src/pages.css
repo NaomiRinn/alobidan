@@ -60,6 +60,28 @@
   display: flex;
   gap: 20px;
   align-items: flex-end;
+  transition: all 0.3s ease;
+}
+
+.mobile-filter-toggle {
+  display: none;
+  width: 100%;
+  padding: 14px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 16px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: var(--shadow-sm);
+}
+
+.mobile-filter-toggle:active {
+  background: var(--bg-main);
+  transform: scale(0.98);
 }
 
 .filter-group {

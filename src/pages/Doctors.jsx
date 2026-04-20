@@ -15,6 +15,7 @@ export default function Doctors({ setCurrentPage, setSelectedDoctor }) {
   const [selectedCategory, setSelectedCategory] = useState('Semua Layanan');
   const [sortBy, setSortBy] = useState('rating');
   const [showAvailableOnly, setShowAvailableOnly] = useState(false);
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
 
   const filtered = useMemo(() => {
     let result = [...servicesList];
@@ -79,7 +80,16 @@ export default function Doctors({ setCurrentPage, setSelectedDoctor }) {
             )}
           </div>
 
-          <div className="filter-row">
+          <button 
+            className="mobile-filter-toggle" 
+            onClick={() => setShowMobileFilters(!showMobileFilters)}
+            id="mobile-filter-btn"
+          >
+            <span className="toggle-icon">{showMobileFilters ? '✕' : '⚙️'}</span>
+            {showMobileFilters ? 'Sembunyikan Filter' : 'Filter & Urutkan'}
+          </button>
+
+          <div className={`filter-row ${showMobileFilters ? 'show' : ''}`}>
             <div className="filter-group">
               <label className="filter-label">Kategori</label>
               <select

@@ -32,21 +32,13 @@ export default function Login({ setCurrentPage }) {
 
       <div className="auth-container">
         <div className="auth-logo" onClick={() => setCurrentPage('home')}>
-          <img src="/alobidan.png" alt="AloBidan" className="logo-img" style={{ height: '40px', objectFit: 'contain' }} />
-          <span className="logo-text">Alo<span className="logo-accent">Bidan</span></span>
+          <img src="/alobidan.png" alt="AloBidan" className="logo-img" style={{ height: '120px', objectFit: 'contain' }} />
         </div>
 
         <div className="auth-card">
           <div className="auth-card-header">
             <h1 className="auth-title">Selamat Datang Kembali!</h1>
             <p className="auth-subtitle">Masuk ke akun AloBidan Bunda</p>
-          </div>
-
-          {/* Demo Credentials */}
-          <div className="demo-credentials">
-            <strong>Demo Akun:</strong>
-            <p>Email: <code>bunda@contoh.com</code></p>
-            <p>Password: <code>password123</code></p>
           </div>
 
           <form onSubmit={handleSubmit} className="auth-form" id="login-form">
@@ -80,17 +72,9 @@ export default function Login({ setCurrentPage }) {
                   required
                 />
                 <button type="button" className="show-pass-btn" onClick={() => setShowPass(!showPass)}>
-                  {showPass ? 'Sembunyi' : 'Lihat'}
+                  {showPass ? 'Sembunyi' : 'tampilkan'}
                 </button>
               </div>
-            </div>
-
-            <div className="form-row">
-              <label className="remember-me">
-                <input type="checkbox" id="remember-me" />
-                <span>Ingat saya</span>
-              </label>
-              <button type="button" className="forgot-btn">Lupa password?</button>
             </div>
 
             {error && <div className="auth-error">{error}</div>}
@@ -104,19 +88,6 @@ export default function Login({ setCurrentPage }) {
               {loading ? <span className="loading-spinner"></span> : 'Masuk'}
             </button>
           </form>
-
-          <div className="auth-divider">
-            <span>atau masuk dengan</span>
-          </div>
-
-          <div className="social-login">
-            <button className="social-login-btn">
-              Google
-            </button>
-            <button className="social-login-btn">
-              Facebook
-            </button>
-          </div>
 
           <p className="auth-switch">
             Belum punya akun?{' '}

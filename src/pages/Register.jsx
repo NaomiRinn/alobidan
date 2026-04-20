@@ -70,7 +70,7 @@ export default function Register({ setCurrentPage }) {
           <div className="auth-card-header">
             <h1 className="auth-title">Buat Akun Baru</h1>
             <p className="auth-subtitle">
-              Bergabung dengan 10.000+ Bunda AloBidan
+              Bergabung dengan 1.000+ Bunda AloBidan
             </p>
           </div>
 
