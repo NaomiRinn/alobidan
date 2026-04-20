@@ -22,6 +22,9 @@ export function AppProvider({ children }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [symptoms, setSymptoms] = useState([]);
   const [diseases, setDiseases] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [usersLoading, setUsersLoading] = useState(true);
+  const [notifications, setNotifications] = useState([]);
   const [dataLoading, setDataLoading] = useState(true);
 
   // Fetch master data from backend on mount
@@ -57,7 +60,15 @@ export function AppProvider({ children }) {
     fetchData();
   }, []);
 
-  // Fetch bookings from backend whenever user changes
+  const addNotification = useCallback((message, type = 'info') => {
+    const id = Date.now();
+    setNotifications(prev => [...prev, { id, message, type }]);
+    setTimeout(() => {
+      setNotifications(prev => prev.filter(n => n.id !== id));
+    }, 5000);
+  }, []);
+
+  // Fetch bookings whenever user changes
   useEffect(() => {
     if (!user) {
       setBookings([]);
@@ -65,17 +76,74 @@ export function AppProvider({ children }) {
       return;
     }
 
-    setBookingsLoading(true);
-    fetch(`${API_BASE}/bookings?userId=${user.id}`)
-      .then(res => res.json())
-      .then(data => {
-        if (Array.isArray(data)) {
-          setBookings(data);
-        }
-      })
-      .catch(err => console.warn('Failed to fetch bookings from API:', err))
-      .finally(() => setBookingsLoading(false));
-  }, [user]);
+    const fetchBookings = (isPolling = false) => {
+      if (!isPolling) setBookingsLoading(true);
+      
+      const url = user.role === 'admin' ? `${API_BASE}/bookings` : `${API_BASE}/bookings?userId=${user.id}`;
+      
+      fetch(url)
+        .then(res => res.json())
+        .then(data => {
+          if (Array.isArray(data)) {
+            // Admin Notification Logic: Detect new bookings
+            if (user.role === 'admin' && isPolling && data.length > bookings.length) {
+              const newCount = data.length - bookings.length;
+              addNotification(`Ada ${newCount} janji temu baru!`, 'info');
+            }
+            setBookings(data);
+          }
+        })
+        .catch(err => console.warn('Failed to fetch bookings:', err))
+        .finally(() => {
+          if (!isPolling) setBookingsLoading(false);
+        });
+    };
+
+    fetchBookings();
+
+    // Polling for admin to keep data fresh and trigger notifications
+    let interval;
+    if (user.role === 'admin') {
+      interval = setInterval(() => fetchBookings(true), 15000); // Poll every 15s
+    }
+
+    return () => interval && clearInterval(interval);
+  }, [user, bookings.length, addNotification]);
+
+  // Fetch all users if admin
+  useEffect(() => {
+    if (!user || user.role !== 'admin') {
+      setUsers([]);
+      setUsersLoading(false);
+      return;
+    }
+
+    const fetchUsers = (isPolling = false) => {
+      if (!isPolling) setUsersLoading(true);
+      fetch(`${API_BASE}/users`)
+        .then(res => res.json())
+        .then(data => {
+          if (Array.isArray(data)) {
+            // Optional: Notification for new user registration
+            if (isPolling && data.length > users.length) {
+              addNotification(`Ada ${data.length - users.length} pengguna baru yang mendaftar!`, 'success');
+            }
+            setUsers(data);
+          }
+        })
+        .catch(err => console.warn('Failed to fetch users:', err))
+        .finally(() => {
+          if (!isPolling) setUsersLoading(false);
+        });
+    };
+
+    fetchUsers();
+
+    const interval = setInterval(() => fetchUsers(true), 60000); // Poll users every 1 minute
+    return () => clearInterval(interval);
+  }, [user, users.length, addNotification]);
+
+
 
   // Persist clinic status
   useEffect(() => {
@@ -167,6 +235,10 @@ export function AppProvider({ children }) {
       setSearchQuery,
       symptoms,
       diseases,
+      users,
+      usersLoading,
+      notifications,
+      addNotification,
       dataLoading,
     }}>
       {children}

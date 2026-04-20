@@ -15,7 +15,9 @@ export default function Navbar({ currentPage, setCurrentPage }) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const activeBookings = bookings.filter(b => b.status === 'confirmed').length;
+  const notifCount = user?.role === 'admin' 
+    ? bookings.filter(b => b.status === 'pending').length 
+    : bookings.filter(b => b.status === 'confirmed').length;
 
   const navLinks = [
     { id: 'home', label: 'Beranda' },
@@ -55,9 +57,9 @@ export default function Navbar({ currentPage, setCurrentPage }) {
         <div className="navbar-right">
           {user ? (
             <div className="user-menu">
-              <button className="notif-btn" onClick={() => navigate('bookings')} title="Jadwal Janji Temu">
+              <button className="notif-btn" onClick={() => navigate(user.role === 'admin' ? 'admin' : 'bookings')} title="Notifikasi Janji">
                 🔔
-                {activeBookings > 0 && <span className="notif-badge">{activeBookings}</span>}
+                {notifCount > 0 && <span className="notif-badge">{notifCount}</span>}
               </button>
 
               <div className="user-dropdown" onClick={() => setDropdownOpen(!dropdownOpen)}>
@@ -69,8 +71,8 @@ export default function Navbar({ currentPage, setCurrentPage }) {
                     <button onClick={() => { navigate('profile'); setDropdownOpen(false); }}>
                       Profil Saya
                     </button>
-                    <button onClick={() => { navigate('bookings'); setDropdownOpen(false); }}>
-                      Janji Saya ({activeBookings})
+                    <button onClick={() => { navigate(user.role === 'admin' ? 'admin' : 'bookings'); setDropdownOpen(false); }}>
+                      {user.role === 'admin' ? `Janji Masuk (${notifCount})` : `Janji Saya (${notifCount})`}
                     </button>
                     {user.role === 'admin' && (
                       <button onClick={() => { navigate('admin'); setDropdownOpen(false); }} style={{ color: '#f472b6' }}>

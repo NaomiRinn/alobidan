@@ -119,6 +119,30 @@ app.get('/api/diseases', async (req, res) => {
 });
 
 // ========================
+// USERS (Admin Only)
+// ========================
+app.get('/api/users', async (req, res) => {
+  try {
+    const users = await prisma.user.findMany({
+      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        phone: true,
+        role: true,
+        avatar: true,
+        createdAt: true,
+      }
+    });
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Gagal mengambil data pengguna' });
+  }
+});
+
+// ========================
 // BOOKINGS (Janji Temu)
 // ========================
 

@@ -4,8 +4,8 @@ import { useApp } from '../context/AppContext.js';
 
 export default function AdminDashboard({ setCurrentPage }) {
   const { user } = useAuth();
-  const { bookings, updateBookingStatus, isClinicOpen, setIsClinicOpen, services, toggleServiceStatus, updateServiceDetails } = useApp();
-  const [activeTab, setActiveTab] = useState('bookings'); // bookings, services
+  const { bookings, updateBookingStatus, isClinicOpen, setIsClinicOpen, services, toggleServiceStatus, updateServiceDetails, users, usersLoading } = useApp();
+  const [activeTab, setActiveTab] = useState('bookings'); // bookings, services, users
   const [editingServiceId, setEditingServiceId] = useState(null);
   const [editFormData, setEditFormData] = useState({});
 
@@ -89,7 +89,12 @@ export default function AdminDashboard({ setCurrentPage }) {
           <button 
             onClick={() => setActiveTab('bookings')}
             style={{ padding: '0.75rem 1.5rem', background: 'none', border: 'none', borderBottom: activeTab === 'bookings' ? '2px solid #f472b6' : '2px solid transparent', color: activeTab === 'bookings' ? '#f472b6' : '#64748b', fontWeight: activeTab === 'bookings' ? '600' : '400', cursor: 'pointer' }}>
-            Kelola Janji Temu
+            kelola Janji Temu
+          </button>
+          <button 
+            onClick={() => setActiveTab('users')}
+            style={{ padding: '0.75rem 1.5rem', background: 'none', border: 'none', borderBottom: activeTab === 'users' ? '2px solid #f472b6' : '2px solid transparent', color: activeTab === 'users' ? '#f472b6' : '#64748b', fontWeight: activeTab === 'users' ? '600' : '400', cursor: 'pointer' }}>
+            Manajemen Pasien
           </button>
           <button 
             onClick={() => setActiveTab('services')}
@@ -160,6 +165,60 @@ export default function AdminDashboard({ setCurrentPage }) {
                             <option value="completed">Selesai</option>
                             <option value="cancelled">Batal</option>
                           </select>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Tab Content: Users */}
+        {activeTab === 'users' && (
+          <div className="admin-panel" style={{ background: '#fff', padding: '1.5rem', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}>
+            <h2 style={{ fontSize: '1.25rem', marginBottom: '1rem', color: '#0f172a' }}>Daftar Pasien Terdaftar</h2>
+            
+            {usersLoading ? (
+              <p style={{ textAlign: 'center', padding: '2rem' }}>Memuat data pasien...</p>
+            ) : users.length === 0 ? (
+              <p style={{ color: '#64748b', textAlign: 'center', padding: '2rem' }}>Belum ada pasien yang terdaftar.</p>
+            ) : (
+              <div style={{ overflowX: 'auto' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+                  <thead>
+                    <tr style={{ background: '#f8fafc', color: '#475569', fontSize: '0.875rem' }}>
+                      <th style={{ padding: '1rem', borderBottom: '1px solid #e2e8f0' }}>Nama / Email</th>
+                      <th style={{ padding: '1rem', borderBottom: '1px solid #e2e8f0' }}>Telepon</th>
+                      <th style={{ padding: '1rem', borderBottom: '1px solid #e2e8f0' }}>Role</th>
+                      <th style={{ padding: '1rem', borderBottom: '1px solid #e2e8f0' }}>Bergabung</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {users.map(u => (
+                      <tr key={u.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                        <td style={{ padding: '1rem' }} data-label="Nama/Email">
+                          <div style={{ fontWeight: '600', color: '#0f172a' }}>{u.name}</div>
+                          <div style={{ fontSize: '0.875rem', color: '#64748b' }}>{u.email}</div>
+                        </td>
+                        <td style={{ padding: '1rem' }} data-label="Telepon">
+                          {u.phone || '-'}
+                        </td>
+                        <td style={{ padding: '1rem' }} data-label="Role">
+                          <span style={{ 
+                            padding: '0.25rem 0.75rem', 
+                            borderRadius: '1rem', 
+                            fontSize: '0.75rem', 
+                            fontWeight: '600',
+                            backgroundColor: u.role === 'admin' ? '#fce7f3' : '#f1f5f9',
+                            color: u.role === 'admin' ? '#9d174d' : '#475569',
+                          }}>
+                            {u.role.toUpperCase()}
+                          </span>
+                        </td>
+                        <td style={{ padding: '1rem' }} data-label="Bergabung">
+                          {u.createdAt ? new Date(u.createdAt).toLocaleDateString('id-ID') : '-'}
                         </td>
                       </tr>
                     ))}
