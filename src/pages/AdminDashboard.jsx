@@ -87,7 +87,8 @@ export default function AdminDashboard({ setCurrentPage }) {
 
     const data = last7Days.map(day => {
       const count = bookings.filter(b => {
-        const bDate = new Date(b.date).toLocaleDateString('id-ID', { weekday: 'short' });
+        if (!b.createdAt) return false;
+        const bDate = new Date(b.createdAt).toLocaleDateString('id-ID', { weekday: 'short' });
         return bDate === day;
       }).length;
       return { label: day, value: count };
@@ -123,9 +124,10 @@ export default function AdminDashboard({ setCurrentPage }) {
 
       <div className="container" style={{ marginTop: '2rem' }}>
         {/* Quick Stats & Clinic Control */}
+        {/* Quick Stats & Clinic Control */}
         <div className="admin-dashboard-stats">
           
-          <div className="stat-card" style={{ background: '#fff', padding: '1.5rem', borderRadius: '12px', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)', border: '1px solid #f1f5f9' }}>
+          <div className="stat-card">
             <h3 style={{ fontSize: '0.875rem', color: '#64748b', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               ⚙️ Pengaturan Klinik
             </h3>
@@ -147,7 +149,7 @@ export default function AdminDashboard({ setCurrentPage }) {
             </div>
           </div>
 
-          <div className="stat-card" style={{ background: '#fff', padding: '1.5rem', borderRadius: '12px', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)', border: '1px solid #f1f5f9' }}>
+          <div className="stat-card">
             <h3 style={{ fontSize: '0.875rem', color: '#64748b', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               📅 Total Janji Temu
             </h3>
@@ -155,7 +157,7 @@ export default function AdminDashboard({ setCurrentPage }) {
             <p style={{ fontSize: '0.75rem', color: '#f59e0b', fontWeight: '500' }}>✨ {pendingBookings} Menunggu Konfirmasi</p>
           </div>
 
-          <div className="stat-card" style={{ background: '#fff', padding: '1.5rem', borderRadius: '12px', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)', border: '1px solid #f1f5f9', position: 'relative', overflow: 'hidden' }}>
+          <div className="stat-card" style={{ position: 'relative', overflow: 'hidden' }}>
             <h3 style={{ fontSize: '0.875rem', color: '#64748b', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                🩺 Layanan Aktif
             </h3>
@@ -168,7 +170,7 @@ export default function AdminDashboard({ setCurrentPage }) {
         </div>
 
         {/* Analytics Section */}
-        <div className="admin-panel" style={{ background: '#fff', padding: '1.5rem', borderRadius: '12px', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)', marginBottom: '2rem', border: '1px solid #f1f5f9' }}>
+        <div className="admin-panel">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
             <div>
               <h2 style={{ fontSize: '1.25rem', color: '#0f172a', margin: 0 }}>📈 Statistik Kunjungan Pekan Ini</h2>
@@ -190,27 +192,27 @@ export default function AdminDashboard({ setCurrentPage }) {
         </div>
 
         {/* Tab Navigation */}
-        <div style={{ display: 'flex', gap: '1rem', borderBottom: '1px solid #e2e8f0', marginBottom: '2rem' }}>
+        <div className="tab-navigation">
           <button 
             onClick={() => setActiveTab('bookings')}
-            style={{ padding: '0.75rem 1.5rem', background: 'none', border: 'none', borderBottom: activeTab === 'bookings' ? '2px solid #f472b6' : '2px solid transparent', color: activeTab === 'bookings' ? '#f472b6' : '#64748b', fontWeight: activeTab === 'bookings' ? '600' : '400', cursor: 'pointer' }}>
-            kelola Janji Temu
+            className={`tab-btn ${activeTab === 'bookings' ? 'active' : ''}`}>
+            Kelola Janji Temu
           </button>
           <button 
             onClick={() => setActiveTab('users')}
-            style={{ padding: '0.75rem 1.5rem', background: 'none', border: 'none', borderBottom: activeTab === 'users' ? '2px solid #f472b6' : '2px solid transparent', color: activeTab === 'users' ? '#f472b6' : '#64748b', fontWeight: activeTab === 'users' ? '600' : '400', cursor: 'pointer' }}>
+            className={`tab-btn ${activeTab === 'users' ? 'active' : ''}`}>
             Manajemen Pasien
           </button>
           <button 
             onClick={() => setActiveTab('services')}
-            style={{ padding: '0.75rem 1.5rem', background: 'none', border: 'none', borderBottom: activeTab === 'services' ? '2px solid #f472b6' : '2px solid transparent', color: activeTab === 'services' ? '#f472b6' : '#64748b', fontWeight: activeTab === 'services' ? '600' : '400', cursor: 'pointer' }}>
+            className={`tab-btn ${activeTab === 'services' ? 'active' : ''}`}>
             Manajemen Layanan
           </button>
         </div>
 
         {/* Tab Content: Bookings */}
         {activeTab === 'bookings' && (
-          <div className="admin-panel" style={{ background: '#fff', padding: '1.5rem', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}>
+          <div className="admin-panel">
             <h2 style={{ fontSize: '1.25rem', marginBottom: '1rem', color: '#0f172a' }}>Janji Temu Pasien</h2>
             
             {bookings.length === 0 ? (
@@ -231,8 +233,11 @@ export default function AdminDashboard({ setCurrentPage }) {
                     {[...bookings].reverse().map(b => (
                       <tr key={b.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
                         <td style={{ padding: '1rem' }} data-label="Waktu">
-                          <div style={{ fontWeight: '600', color: '#0f172a' }}>{new Date(b.date).toLocaleDateString('id-ID')}</div>
-                          <div style={{ fontSize: '0.875rem', color: '#64748b' }}>{b.time}</div>
+                          <div style={{ fontWeight: '600', color: '#0f172a' }}>{b.day}</div>
+                          <div style={{ fontSize: '0.875rem', color: '#64748b' }}>{b.time} WIB</div>
+                          <div style={{ fontSize: '0.75rem', color: '#94a3b8', marginTop: '4px' }}>
+                            Dibuat: {b.createdAt ? new Date(b.createdAt).toLocaleDateString('id-ID') : '-'}
+                          </div>
                         </td>
                         <td style={{ padding: '1rem' }} data-label="Pasien">
                           <div style={{ fontWeight: '500', color: '#0f172a' }}>{b.patientName || b.patientPhone}</div>
@@ -282,7 +287,7 @@ export default function AdminDashboard({ setCurrentPage }) {
 
         {/* Tab Content: Users */}
         {activeTab === 'users' && (
-          <div className="admin-panel" style={{ background: '#fff', padding: '1.5rem', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}>
+          <div className="admin-panel">
             <h2 style={{ fontSize: '1.25rem', marginBottom: '1rem', color: '#0f172a' }}>Daftar Pasien Terdaftar</h2>
             
             {usersLoading ? (
@@ -336,7 +341,7 @@ export default function AdminDashboard({ setCurrentPage }) {
 
         {/* Tab Content: Services */}
         {activeTab === 'services' && (
-          <div className="admin-panel" style={{ background: '#fff', padding: '1.5rem', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}>
+          <div className="admin-panel">
             <h2 style={{ fontSize: '1.25rem', marginBottom: '1rem', color: '#0f172a' }}>Daftar Layanan Klinik</h2>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1rem' }}>
               {services.map(s => (
