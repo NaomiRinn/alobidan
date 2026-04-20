@@ -55,6 +55,10 @@ export default function Navbar({ currentPage, setCurrentPage }) {
         <div className="navbar-right">
           {user ? (
             <div className="user-menu">
+              <button className="notif-btn" onClick={() => navigate('bookings')} title="Jadwal Janji Temu">
+                🔔
+                {activeBookings > 0 && <span className="notif-badge">{activeBookings}</span>}
+              </button>
 
               <div className="user-dropdown" onClick={() => setDropdownOpen(!dropdownOpen)}>
                 <div className="user-avatar">{user.avatar}</div>

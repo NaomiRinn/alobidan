@@ -244,7 +244,8 @@
    BOOKINGS PAGE
    ========================================= */
 .bookings-list { display: flex; flex-direction: column; gap: 20px; }
-.booking-item { background: white; border-radius: var(--radius-lg); border: 1px solid var(--border); padding: 24px; box-shadow: var(--shadow-sm); }
+.booking-item { background: white; border-radius: var(--radius-lg); border: 1px solid var(--border); padding: 24px; box-shadow: var(--shadow-sm); transition: all 0.3s ease; }
+.booking-item:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: var(--primary-light); }
 .booking-item-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
 .booking-doc-info { display: flex; gap: 16px; }
 .booking-doc-icon { width: 50px; height: 50px; background: var(--primary-light); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
@@ -253,7 +254,8 @@
 .booking-hospital { color: var(--text-muted) !important; font-weight: 500 !important; font-size: 13px !important; }
 .booking-status-badge { padding: 6px 16px; border-radius: var(--radius-full); font-weight: 700; font-size: 13px; }
 .booking-item-details { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; font-size: 14px; color: var(--text-main); margin-bottom: 24px; }
-.booking-detail { display: flex; align-items: center; gap: 10px; }
+.booking-detail { display: flex; align-items: center; gap: 12px; }
+.booking-detail-icon { font-size: 18px; color: var(--primary); display: flex; align-items: center; justify-content: center; width: 24px; }
 .booking-item-actions { display: flex; gap: 16px; border-top: 1px solid var(--border); padding-top: 20px; }
 .btn-reschedule { padding: 10px 20px; border: 1px solid var(--primary); color: var(--primary); border-radius: var(--radius-full); font-weight: 600; font-size: 14px; }
 .btn-reschedule:hover { background: var(--primary-light); }

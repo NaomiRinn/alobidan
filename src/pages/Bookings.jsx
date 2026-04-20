@@ -38,7 +38,7 @@ export default function Bookings({ setCurrentPage }) {
       <div className="container bookings-page">
         {bookings.length === 0 ? (
           <div className="empty-state">
-            <div className="empty-icon"></div>
+            <div className="empty-icon">📅</div>
             <h3>Belum ada jadwal kunjungan</h3>
             <p>Bunda belum memiliki jadwal janji layanan. Pilih layanan dan buat janji kunjungan sekarang!</p>
             <button className="btn-reset" onClick={() => setCurrentPage('doctors')}>
@@ -53,7 +53,7 @@ export default function Bookings({ setCurrentPage }) {
                 <div key={booking.id} className="booking-item">
                   <div className="booking-item-header">
                     <div className="booking-doc-info">
-                    <div className="booking-doc-icon"></div>
+                    <div className="booking-doc-icon">🩺</div>
                       <div>
                         <h3>{booking.serviceName || booking.doctorName}</h3>
                         <p>{booking.serviceSpec || booking.doctorSpec}</p>
@@ -70,15 +70,18 @@ export default function Bookings({ setCurrentPage }) {
 
                   <div className="booking-item-details">
                     <div className="booking-detail">
+                      <span className="booking-detail-icon">📅</span>
                       <span>{booking.day}, {booking.time} WIB</span>
                     </div>
 
                     {booking.complaint && (
                       <div className="booking-detail">
+                        <span className="booking-detail-icon">📝</span>
                         <span>"{booking.complaint}"</span>
                       </div>
                     )}
                     <div className="booking-detail">
+                      <span className="booking-detail-icon">🕒</span>
                       <span>Dibuat: {new Date(booking.createdAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
                     </div>
                   </div>
