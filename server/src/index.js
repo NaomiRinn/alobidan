@@ -15,7 +15,7 @@ app.set('trust proxy', 1);
 
 // Middlewares
 app.use(cors({
-  origin: ['https://alobidan.up.railway.app', 'http://localhost:3000'],
+  origin: ['https://alo-bidan-production.up.railway.app', 'http://localhost:3000'],
   credentials: true
 }));
 app.use(express.json());
