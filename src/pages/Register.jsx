@@ -59,11 +59,8 @@ export default function Register({ setCurrentPage }) {
             src="/alobidan.png"
             alt="AloBidan"
             className="logo-img"
-            style={{ height: "40px", objectFit: "contain" }}
+            style={{ height: "120px", objectFit: "contain" }}
           />
-          <span className="logo-text">
-            Alo<span className="logo-accent">Bidan</span>
-          </span>
         </div>
 
         <div className="auth-card">

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { AuthProvider } from './context/AuthContext.jsx';
 import { AppProvider } from './context/AppContext.jsx';
 import Navbar from './components/Navbar';
+import Notification from './components/Notification';
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import Doctors from './pages/Doctors';
@@ -48,6 +49,7 @@ function AppContent() {
       {!noNavPages.includes(currentPage) && (
         <Navbar currentPage={currentPage} setCurrentPage={setCurrentPage} />
       )}
+      <Notification />
       <main className={`main-content ${noNavPages.includes(currentPage) ? 'no-nav' : ''}`}>
         {renderPage()}
       </main>

@@ -2,9 +2,47 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext.js';
 import { useApp } from '../context/AppContext.js';
 
+// Custom SVG Chart Component
+const MiniChart = ({ data }) => {
+  if (!data || data.length === 0) return null;
+  const maxVal = Math.max(...data.map(d => d.value), 1);
+  const height = 100;
+  const width = 200;
+  
+  return (
+    <div style={{ marginTop: '1rem', height: '100px' }}>
+      <svg viewBox={`0 0 ${width} ${height}`} style={{ width: '100%', height: '100%' }}>
+        {data.map((d, i) => {
+          const barWidth = width / data.length;
+          const barHeight = (d.value / maxVal) * height;
+          const x = i * barWidth;
+          const y = height - barHeight;
+          return (
+            <rect 
+              key={i}
+              x={x + 2} 
+              y={y} 
+              width={barWidth - 4} 
+              height={barHeight} 
+              fill="url(#gradient)" 
+              rx="2"
+            />
+          );
+        })}
+        <defs>
+          <linearGradient id="gradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#f472b6" />
+            <stop offset="100%" stopColor="#ec4899" />
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+  );
+};
+
 export default function AdminDashboard({ setCurrentPage }) {
   const { user } = useAuth();
-  const { bookings, updateBookingStatus, isClinicOpen, setIsClinicOpen, services, toggleServiceStatus, updateServiceDetails, users, usersLoading } = useApp();
+  const { bookings, updateBookingStatus, isClinicOpen, setIsClinicOpen, services, toggleServiceStatus, updateServiceDetails, users, usersLoading, refreshData } = useApp();
   const [activeTab, setActiveTab] = useState('bookings'); // bookings, services, users
   const [editingServiceId, setEditingServiceId] = useState(null);
   const [editFormData, setEditFormData] = useState({});
@@ -38,21 +76,59 @@ export default function AdminDashboard({ setCurrentPage }) {
   const pendingBookings = bookings.filter(b => b.status === 'pending').length;
   const activeServices = services.filter(s => s.available).length;
 
+  // Prepare chart data (bookings per day for last 7 days)
+  const getChartData = () => {
+    const today = new Date();
+    const last7Days = [...Array(7)].map((_, i) => {
+      const d = new Date();
+      d.setDate(today.getDate() - (6 - i));
+      return d.toLocaleDateString('id-ID', { weekday: 'short' });
+    });
+
+    const data = last7Days.map(day => {
+      const count = bookings.filter(b => {
+        const bDate = new Date(b.date).toLocaleDateString('id-ID', { weekday: 'short' });
+        return bDate === day;
+      }).length;
+      return { label: day, value: count };
+    });
+    return data;
+  };
+
   return (
     <div className="page-wrapper" style={{ backgroundColor: '#f8fafc', minHeight: '100vh', paddingBottom: '3rem' }}>
-      <div className="page-hero-mini">
+      <div className="page-hero-mini" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div className="container">
           <h1 className="page-title">Dashboard Bidan</h1>
           <p className="page-subtitle">Selamat datang kembali, {user.name}. Kelola antrean dan layanan klinik Anda di sini.</p>
         </div>
+        <button 
+          onClick={refreshData}
+          className="refresh-btn"
+          style={{ 
+            background: 'rgba(255,255,255,0.2)', 
+            border: 'none', 
+            borderRadius: '50%', 
+            padding: '10px', 
+            marginRight: '2rem',
+            color: '#fff',
+            cursor: 'pointer',
+            transition: '0.3s'
+          }}
+          title="Refresh Data"
+        >
+          🔄
+        </button>
       </div>
 
       <div className="container" style={{ marginTop: '2rem' }}>
         {/* Quick Stats & Clinic Control */}
         <div className="admin-dashboard-stats">
           
-          <div className="stat-card" style={{ background: '#fff', padding: '1.5rem', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}>
-            <h3 style={{ fontSize: '0.875rem', color: '#64748b' }}>Pengaturan Klinik</h3>
+          <div className="stat-card" style={{ background: '#fff', padding: '1.5rem', borderRadius: '12px', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)', border: '1px solid #f1f5f9' }}>
+            <h3 style={{ fontSize: '0.875rem', color: '#64748b', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              ⚙️ Pengaturan Klinik
+            </h3>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '1rem' }}>
               <span style={{ fontWeight: '600', color: isClinicOpen ? '#10b981' : '#ef4444' }}>
                 {isClinicOpen ? 'Buka (Menerima Janji)' : 'Tutup Sementara'}
@@ -71,17 +147,46 @@ export default function AdminDashboard({ setCurrentPage }) {
             </div>
           </div>
 
-          <div className="stat-card" style={{ background: '#fff', padding: '1.5rem', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}>
-            <h3 style={{ fontSize: '0.875rem', color: '#64748b' }}>Total Janji Temu</h3>
+          <div className="stat-card" style={{ background: '#fff', padding: '1.5rem', borderRadius: '12px', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)', border: '1px solid #f1f5f9' }}>
+            <h3 style={{ fontSize: '0.875rem', color: '#64748b', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              📅 Total Janji Temu
+            </h3>
             <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#0f172a', marginTop: '0.5rem' }}>{totalBookings}</div>
-            <p style={{ fontSize: '0.75rem', color: '#f59e0b' }}>{pendingBookings} Menunggu Konfirmasi</p>
+            <p style={{ fontSize: '0.75rem', color: '#f59e0b', fontWeight: '500' }}>✨ {pendingBookings} Menunggu Konfirmasi</p>
           </div>
 
-          <div className="stat-card" style={{ background: '#fff', padding: '1.5rem', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}>
-            <h3 style={{ fontSize: '0.875rem', color: '#64748b' }}>Layanan Aktif</h3>
+          <div className="stat-card" style={{ background: '#fff', padding: '1.5rem', borderRadius: '12px', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)', border: '1px solid #f1f5f9', position: 'relative', overflow: 'hidden' }}>
+            <h3 style={{ fontSize: '0.875rem', color: '#64748b', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+               🩺 Layanan Aktif
+            </h3>
             <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#0f172a', marginTop: '0.5rem' }}>{activeServices} <span style={{fontSize: '1rem', color: '#64748b', fontWeight: 'normal'}}>/ {services.length}</span></div>
+            <div style={{ height: '4px', background: '#f1f5f9', borderRadius: '2px', marginTop: '1rem' }}>
+              <div style={{ height: '100%', width: `${(activeServices/services.length)*100}%`, background: '#f472b6', borderRadius: '2px' }}></div>
+            </div>
           </div>
 
+        </div>
+
+        {/* Analytics Section */}
+        <div className="admin-panel" style={{ background: '#fff', padding: '1.5rem', borderRadius: '12px', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)', marginBottom: '2rem', border: '1px solid #f1f5f9' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+            <div>
+              <h2 style={{ fontSize: '1.25rem', color: '#0f172a', margin: 0 }}>📈 Statistik Kunjungan Pekan Ini</h2>
+              <p style={{ fontSize: '0.875rem', color: '#64748b', margin: '4px 0 0 0' }}>Data janji temu harian bunda</p>
+            </div>
+            <div style={{ textAlign: 'right' }}>
+              <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#f472b6' }}>{totalBookings}</div>
+              <div style={{ fontSize: '0.75rem', color: '#64748b', textTransform: 'uppercase' }}>Total Reservasi</div>
+            </div>
+          </div>
+          <div style={{ background: '#f8fafc', borderRadius: '8px', padding: '1.5rem' }}>
+            <MiniChart data={getChartData()} />
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.5rem' }}>
+              {getChartData().map((d, i) => (
+                <span key={i} style={{ fontSize: '0.75rem', color: '#64748b', width: '14.28%', textAlign: 'center' }}>{d.label}</span>
+              ))}
+            </div>
+          </div>
         </div>
 
         {/* Tab Navigation */}

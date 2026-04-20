@@ -62,11 +62,32 @@ export function AppProvider({ children }) {
 
   const addNotification = useCallback((message, type = 'info') => {
     const id = Date.now();
-    setNotifications(prev => [...prev, { id, message, type }]);
+    // Don't add duplicate notifications for the same message in a short window
+    setNotifications(prev => {
+      if (prev.some(n => n.message === message)) return prev;
+      return [...prev, { id, message, type }];
+    });
     setTimeout(() => {
       setNotifications(prev => prev.filter(n => n.id !== id));
     }, 5000);
   }, []);
+
+  const refreshData = useCallback(async () => {
+    if (!user) return;
+    
+    // Refresh bookings
+    const bookingUrl = user.role === 'admin' ? `${API_BASE}/bookings` : `${API_BASE}/bookings?userId=${user.id}`;
+    const bRes = await fetch(bookingUrl);
+    const bData = await bRes.json();
+    if (Array.isArray(bData)) setBookings(bData);
+
+    // Refresh users if admin
+    if (user.role === 'admin') {
+      const uRes = await fetch(`${API_BASE}/users`);
+      const uData = await uRes.json();
+      if (Array.isArray(uData)) setUsers(uData);
+    }
+  }, [user]);
 
   // Fetch bookings whenever user changes
   useEffect(() => {
@@ -239,6 +260,7 @@ export function AppProvider({ children }) {
       usersLoading,
       notifications,
       addNotification,
+      refreshData,
       dataLoading,
     }}>
       {children}
