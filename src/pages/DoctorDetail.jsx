@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext.js';
 import { useApp } from '../context/AppContext.js';
+import MapComponent from '../components/MapComponent';
 
 const timeSlots = ['08:00', '09:00', '10:00', '11:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00'];
 
@@ -147,6 +148,10 @@ export default function DoctorDetail({ doctor, setCurrentPage }) {
                   </div>
                   <p className="schedule-note">Lokasi: Desa Bantarmangu, Kec. Cimanggu, Kab. Cilacap</p>
                   <p className="schedule-note">Jam Pelayanan: 08:00 - 20:00 WIB (Senin - Minggu)</p>
+                  
+                  <div className="doctor-detail-map">
+                    <MapComponent height="250px" />
+                  </div>
                 </div>
               )}
 

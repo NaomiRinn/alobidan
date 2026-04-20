@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext.js';
 import DoctorCard from '../components/DoctorCard';
+import MapComponent from '../components/MapComponent';
 
 const stats = [
   { value: '15+', label: 'Tahun Pengalaman', icon: '' },
@@ -276,6 +277,52 @@ export default function Home({ setCurrentPage, setSelectedDoctor }) {
           </div>
         </div>
       </section>
+      
+      {/* Map Section */}
+      <section className="map-section">
+        <div className="container">
+          <div className="section-header">
+            <div className="section-tag">Kontak & Lokasi</div>
+            <h2 className="section-title">Kunjungi Klinik Kami</h2>
+            <p className="section-subtitle">Praktek Mandiri Bidan (PMB) Eli Hidayati siap melayani Bunda di lokasi yang nyaman dan strategis.</p>
+          </div>
+
+          <div className="map-container-wrapper">
+            <div className="map-info">
+              <div className="map-info-title">Informasi Kontak</div>
+              
+              <div className="map-info-item">
+                <div className="map-info-icon">📍</div>
+                <div className="map-info-text">
+                  <strong>Lokasi Klinik</strong>
+                  <p>Desa Bantarmangu, Kec. Cimanggu, Kab. Cilacap, Jawa Tengah</p>
+                </div>
+              </div>
+
+              <div className="map-info-item">
+                <div className="map-info-icon">📞</div>
+                <div className="map-info-text">
+                  <strong>WhatsApp/Telepon</strong>
+                  <p>+62 812-3456-7890 (Bidan Eli)</p>
+                </div>
+              </div>
+
+              <div className="map-info-item">
+                <div className="map-info-icon">⏰</div>
+                <div className="map-info-text">
+                  <strong>Jam Operasional</strong>
+                  <p>Senin - Minggu: 08:00 - 20:00 WIB<br />Persalinan: 24 Jam Standby</p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="leaflet-container">
+              <MapComponent height="100%" />
+            </div>
+          </div>
+        </div>
+      </section>
+
 
       {/* CTA Banner */}
       <section className="cta-banner">

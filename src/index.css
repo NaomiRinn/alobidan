@@ -1,12 +1,107 @@
+@import "leaflet/dist/leaflet.css";
+
 /* =========================================
-   HOME PAGE
+   MAP STYLES
    ========================================= */
-.home-page {
+.map-section {
+  padding: 80px 0;
+  background: white;
+}
+
+.map-container-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-xl);
+  border: 1px solid var(--border);
+  display: flex;
+  background: white;
+}
+
+.map-info {
+  width: 400px;
+  padding: 40px;
   display: flex;
   flex-direction: column;
-  gap: 60px;
-  padding-bottom: 60px;
+  justify-content: center;
+  background: var(--bg-main);
+  border-right: 1px solid var(--border);
 }
+
+.map-info-title {
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 20px;
+  color: var(--text-main);
+}
+
+.map-info-item {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.map-info-icon {
+  font-size: 24px;
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+.map-info-text strong {
+  display: block;
+  font-size: 16px;
+  margin-bottom: 4px;
+  color: var(--text-main);
+}
+
+.map-info-text p {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.leaflet-container {
+  width: 100%;
+  height: 450px;
+  z-index: 1;
+}
+
+.doctor-detail-map {
+  margin-top: 30px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+
+.map-marker-pulse {
+  background: var(--primary);
+  border-radius: 50%;
+  box-shadow: 0 0 0 rgba(14, 165, 233, 0.4);
+  animation: pulse-marker 2s infinite;
+}
+
+@keyframes pulse-marker {
+  0% { box-shadow: 0 0 0 0 rgba(14, 165, 233, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(14, 165, 233, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(14, 165, 233, 0); }
+}
+
+@media (max-width: 991px) {
+  .map-container-wrapper {
+    flex-direction: column;
+  }
+  .map-info {
+    width: 100%;
+    order: 2;
+  }
+  .leaflet-container {
+    height: 350px;
+    order: 1;
+  }
+}
+
 
 /* Hero Section */
 .hero-section {
