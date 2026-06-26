@@ -15,7 +15,7 @@ app.set('trust proxy', 1);
 
 // Middlewares
 app.use(cors({
-  origin: ['https://alobidan.up.railway.app', 'http://localhost:3000'],
+  origin: [process.env.FRONTEND_URL || 'https://alobidan.up.railway.app', 'http://localhost:3000', 'http://localhost:5173'],
   credentials: true
 }));
 app.use(express.json());
@@ -263,6 +263,11 @@ app.delete('/api/bookings/:id', async (req, res) => {
 
 const PORT = process.env.PORT || 8080;
 
-app.listen(PORT, () => {
-  console.log(`Server AloBidan is running on port ${PORT}`);
-});
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`Server AloBidan is running on port ${PORT}`);
+  });
+}
+
+// Export the Express API
+module.exports = app;
