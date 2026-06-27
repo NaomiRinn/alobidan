@@ -82,11 +82,83 @@ app.get('/api/health', (req, res) => {
 // ========================
 app.get('/api/services', async (req, res) => {
   try {
-    const services = await prisma.service.findMany();
+    const services = await prisma.service.findMany({
+      orderBy: { id: 'asc' }
+    });
     res.json(services);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Failed to fetch services' });
+  }
+});
+
+// POST Service
+app.post('/api/services', async (req, res) => {
+  try {
+    const { name, specialization, hospital, rating, reviews, experience, price, initials, color, about } = req.body;
+    const service = await prisma.service.create({
+      data: {
+        name,
+        specialization: specialization || 'Bidan',
+        hospital: hospital || 'Klinik AloBidan',
+        rating: rating || 5.0,
+        reviews: reviews || 0,
+        experience: experience || '1 tahun',
+        price: Number(price) || 0,
+        initials: initials || name.substring(0, 2).toUpperCase(),
+        color: color || '#f472b6',
+        about: about || '-',
+        available: true,
+        schedule: [],
+        education: [],
+        languages: ['Indonesia']
+      }
+    });
+    res.status(201).json(service);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to create service' });
+  }
+});
+
+// PUT Service
+app.put('/api/services/:id', async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const { name, specialization, price, available } = req.body;
+    
+    const updateData = {};
+    if (name !== undefined) updateData.name = name;
+    if (specialization !== undefined) updateData.specialization = specialization;
+    if (price !== undefined) updateData.price = Number(price);
+    if (available !== undefined) updateData.available = available;
+
+    const service = await prisma.service.update({
+      where: { id },
+      data: updateData
+    });
+    res.json(service);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to update service' });
+  }
+});
+
+// DELETE Service
+app.delete('/api/services/:id', async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    // Delete associated bookings first to prevent foreign key errors
+    await prisma.booking.deleteMany({
+      where: { serviceId: id }
+    });
+    await prisma.service.delete({
+      where: { id }
+    });
+    res.json({ success: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to delete service' });
   }
 });
 
@@ -261,7 +333,7 @@ app.delete('/api/bookings/:id', async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 5000;
 
 if (!process.env.VERCEL) {
   app.listen(PORT, () => {

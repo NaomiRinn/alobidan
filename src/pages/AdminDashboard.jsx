@@ -42,10 +42,12 @@ const MiniChart = ({ data }) => {
 
 export default function AdminDashboard({ setCurrentPage }) {
   const { user } = useAuth();
-  const { bookings, updateBookingStatus, isClinicOpen, setIsClinicOpen, services, toggleServiceStatus, updateServiceDetails, users, usersLoading, refreshData } = useApp();
+  const { bookings, updateBookingStatus, isClinicOpen, setIsClinicOpen, services, toggleServiceStatus, updateServiceDetails, addService, deleteService, users, usersLoading, refreshData } = useApp();
   const [activeTab, setActiveTab] = useState('bookings'); // bookings, services, users
   const [editingServiceId, setEditingServiceId] = useState(null);
   const [editFormData, setEditFormData] = useState({});
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [newServiceData, setNewServiceData] = useState({ name: '', specialization: '', price: '' });
 
   const handleEditClick = (service) => {
     setEditingServiceId(service.id);
@@ -60,6 +62,22 @@ export default function AdminDashboard({ setCurrentPage }) {
   const handleCancelEdit = () => {
     setEditingServiceId(null);
     setEditFormData({});
+  };
+
+  const handleAddSubmit = async () => {
+    if (!newServiceData.name || !newServiceData.price) {
+      alert("Nama dan Harga wajib diisi");
+      return;
+    }
+    await addService(newServiceData);
+    setShowAddForm(false);
+    setNewServiceData({ name: '', specialization: '', price: '' });
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm("Apakah Anda yakin ingin menghapus layanan ini?")) {
+      await deleteService(id);
+    }
   };
 
   useEffect(() => {
@@ -342,7 +360,49 @@ export default function AdminDashboard({ setCurrentPage }) {
         {/* Tab Content: Services */}
         {activeTab === 'services' && (
           <div className="admin-panel">
-            <h2 style={{ fontSize: '1.25rem', marginBottom: '1rem', color: '#0f172a' }}>Daftar Layanan Klinik</h2>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+              <h2 style={{ fontSize: '1.25rem', color: '#0f172a', margin: 0 }}>Daftar Layanan Klinik</h2>
+              <button 
+                onClick={() => setShowAddForm(!showAddForm)}
+                style={{ padding: '0.5rem 1rem', background: '#f472b6', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '600' }}
+              >
+                {showAddForm ? 'Batal Tambah' : '+ Tambah Layanan'}
+              </button>
+            </div>
+            
+            {showAddForm && (
+              <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '8px', marginBottom: '1.5rem', border: '1px solid #e2e8f0' }}>
+                <h3 style={{ fontSize: '1rem', marginTop: 0, marginBottom: '1rem' }}>Tambah Layanan Baru</h3>
+                <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                  <input 
+                    placeholder="Nama Layanan" 
+                    value={newServiceData.name}
+                    onChange={e => setNewServiceData({...newServiceData, name: e.target.value})}
+                    style={{ flex: '1 1 200px', padding: '0.5rem', border: '1px solid #cbd5e1', borderRadius: '4px' }}
+                  />
+                  <input 
+                    placeholder="Spesialisasi (Mis. Umum)" 
+                    value={newServiceData.specialization}
+                    onChange={e => setNewServiceData({...newServiceData, specialization: e.target.value})}
+                    style={{ flex: '1 1 150px', padding: '0.5rem', border: '1px solid #cbd5e1', borderRadius: '4px' }}
+                  />
+                  <input 
+                    type="number"
+                    placeholder="Harga (Rp)" 
+                    value={newServiceData.price}
+                    onChange={e => setNewServiceData({...newServiceData, price: e.target.value})}
+                    style={{ flex: '1 1 100px', padding: '0.5rem', border: '1px solid #cbd5e1', borderRadius: '4px' }}
+                  />
+                  <button 
+                    onClick={handleAddSubmit}
+                    style={{ padding: '0.5rem 1rem', background: '#10b981', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: '600' }}
+                  >
+                    Simpan Layanan
+                  </button>
+                </div>
+              </div>
+            )}
+
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1rem' }}>
               {services.map(s => (
                 <div key={s.id} style={{ border: `1px solid ${s.available ? '#e2e8f0' : '#f87171'}`, borderRadius: '8px', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem', background: s.available ? '#fff' : '#fef2f2' }}>
@@ -381,9 +441,14 @@ export default function AdminDashboard({ setCurrentPage }) {
                       <p style={{ margin: 0, fontSize: '0.875rem', color: '#64748b' }}>Kategori: {s.specialization}</p>
                       
                       <div style={{ marginTop: 'auto', paddingTop: '1rem', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <button onClick={() => handleEditClick(s)} style={{ padding: '0.25rem 0.75rem', fontSize: '0.75rem', background: '#e0e7ff', color: '#4338ca', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: '600' }}>
-                          Edit
-                        </button>
+                        <div style={{ display: 'flex', gap: '0.5rem' }}>
+                          <button onClick={() => handleEditClick(s)} style={{ padding: '0.25rem 0.75rem', fontSize: '0.75rem', background: '#e0e7ff', color: '#4338ca', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: '600' }}>
+                            Edit
+                          </button>
+                          <button onClick={() => handleDelete(s.id)} style={{ padding: '0.25rem 0.75rem', fontSize: '0.75rem', background: '#fee2e2', color: '#b91c1c', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: '600' }}>
+                            Hapus
+                          </button>
+                        </div>
                         <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontSize: '0.875rem', color: s.available ? '#10b981' : '#ef4444', fontWeight: '500' }}>
                           {s.available ? 'Layanan Tersedia' : 'Non-aktif'}
                           <input 

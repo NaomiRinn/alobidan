@@ -108,9 +108,11 @@
 .remove-sym { margin-left: auto; color: var(--text-muted); font-size: 14px; }
 .remove-sym:hover { color: var(--error); }
 
-.step-actions { display: flex; gap: 16px; }
-.btn-back-step { padding: 16px 24px; border: 1px solid var(--border); border-radius: var(--radius-md); font-weight: 600; color: var(--text-main); }
+.step-actions { display: flex; gap: 16px; align-items: center; margin-top: 20px; }
+.btn-back-step { padding: 16px 24px; border: 1px solid var(--border); border-radius: var(--radius-md); font-weight: 600; color: var(--text-main); background: transparent; cursor: pointer; }
 .btn-back-step:hover { background: var(--bg-main); }
+.btn-consult-doctor { padding: 16px 24px; background: #25D366; color: white; border-radius: var(--radius-md); font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; cursor: pointer; transition: 0.2s; }
+.btn-consult-doctor:hover { opacity: 0.9; color: white; text-decoration: none; }
 .btn-analyze { flex: 1; background: var(--primary); color: white; border-radius: var(--radius-md); font-weight: 700; font-size: 16px; display: flex; justify-content: center; align-items: center; gap: 12px; }
 .btn-analyze.loading { background: var(--primary-hover); cursor: wait; }
 

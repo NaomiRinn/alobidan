@@ -32,13 +32,6 @@ const services = [
     color: '#f59e0b',
     page: 'doctors',
   },
-  {
-    icon: ' 📝',
-    title: 'Buku KIA Digital',
-    desc: 'Simpan rekam medis kehamilan dan tumbuh kembang anak Bunda dengan aman dan praktis.',
-    color: '#ec4899',
-    page: 'profile',
-  },
 ];
 
 const testimonials = [
@@ -57,14 +50,6 @@ const testimonials = [
     rating: 5,
     avatar: 'BS',
     color: '#2dd4bf',
-  },
-  {
-    name: 'Bapak Hermawan',
-    role: 'Ayah Siaga',
-    text: 'Booking baby spa untuk istri dan anak jadi super gampang. Nggak usah nunggu lama di lokasi karena sudah booking via web ini.',
-    rating: 5,
-    avatar: 'BH',
-    color: '#fb923c',
   },
 ];
 
@@ -303,7 +288,11 @@ export default function Home({ setCurrentPage, setSelectedDoctor }) {
                 <div className="map-info-icon">📞</div>
                 <div className="map-info-text">
                   <strong>WhatsApp/Telepon</strong>
-                  <p>+62 812-3456-7890 (Bidan Eli)</p>
+                  <p>
+                    <a href="https://wa.me/6281234567890" target="_blank" rel="noopener noreferrer" style={{ color: '#0f172a', textDecoration: 'none' }} onMouseOver={(e) => e.target.style.color = '#f472b6'} onMouseOut={(e) => e.target.style.color = '#0f172a'}>
+                      +62 812-3456-7890 (Bidan Eli)
+                    </a>
+                  </p>
                 </div>
               </div>
 

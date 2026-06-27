@@ -231,12 +231,59 @@ export function AppProvider({ children }) {
     ));
   }, []);
 
-  const toggleServiceStatus = useCallback((serviceId) => {
+  const toggleServiceStatus = useCallback(async (serviceId) => {
+    const service = services.find(s => s.id === serviceId);
+    if (!service) return;
+    try {
+      await fetch(`${API_BASE}/services/${serviceId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ available: !service.available }),
+      });
+    } catch (err) {
+      console.warn('Failed to toggle service status via API:', err);
+    }
     setServices(prev => prev.map(s => s.id === serviceId ? { ...s, available: !s.available } : s));
+  }, [services]);
+
+  const updateServiceDetails = useCallback(async (serviceId, updatedData) => {
+    try {
+      await fetch(`${API_BASE}/services/${serviceId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedData),
+      });
+    } catch (err) {
+      console.warn('Failed to update service via API:', err);
+    }
+    setServices(prev => prev.map(s => s.id === serviceId ? { ...s, ...updatedData } : s));
   }, []);
 
-  const updateServiceDetails = useCallback((serviceId, updatedData) => {
-    setServices(prev => prev.map(s => s.id === serviceId ? { ...s, ...updatedData } : s));
+  const addService = useCallback(async (serviceData) => {
+    try {
+      const res = await fetch(`${API_BASE}/services`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(serviceData),
+      });
+      const newService = await res.json();
+      setServices(prev => [...prev, newService]);
+      return newService;
+    } catch (err) {
+      console.warn('Failed to add service via API:', err);
+      return null;
+    }
+  }, []);
+
+  const deleteService = useCallback(async (serviceId) => {
+    try {
+      await fetch(`${API_BASE}/services/${serviceId}`, {
+        method: 'DELETE',
+      });
+    } catch (err) {
+      console.warn('Failed to delete service via API:', err);
+    }
+    setServices(prev => prev.filter(s => s.id !== serviceId));
   }, []);
 
   return (
@@ -250,6 +297,8 @@ export function AppProvider({ children }) {
       servicesLoading,
       toggleServiceStatus,
       updateServiceDetails,
+      addService,
+      deleteService,
       isClinicOpen,
       setIsClinicOpen,
       searchQuery,
