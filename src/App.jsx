@@ -1,18 +1,19 @@
-import { useState } from 'react';
+import { useState, lazy, Suspense } from 'react';
 import { AuthProvider } from './context/AuthContext.jsx';
 import { AppProvider } from './context/AppContext.jsx';
 import Navbar from './components/Navbar';
 import Notification from './components/Notification';
 import Footer from './components/Footer';
-import Home from './pages/Home';
-import Doctors from './pages/Doctors';
-import DoctorDetail from './pages/DoctorDetail';
-import SymptomChecker from './pages/SymptomChecker';
-import AdminDashboard from './pages/AdminDashboard';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Bookings from './pages/Bookings';
 import './App.css';
+
+const Home = lazy(() => import('./pages/Home'));
+const Doctors = lazy(() => import('./pages/Doctors'));
+const DoctorDetail = lazy(() => import('./pages/DoctorDetail'));
+const SymptomChecker = lazy(() => import('./pages/SymptomChecker'));
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
+const Login = lazy(() => import('./pages/Login'));
+const Register = lazy(() => import('./pages/Register'));
+const Bookings = lazy(() => import('./pages/Bookings'));
 
 function AppContent() {
   const [currentPage, setCurrentPage] = useState('home');
@@ -51,7 +52,9 @@ function AppContent() {
       )}
       <Notification />
       <main className={`main-content ${noNavPages.includes(currentPage) ? 'no-nav' : ''}`}>
-        {renderPage()}
+        <Suspense fallback={<div style={{ textAlign: 'center', padding: '50px', color: '#6366f1' }}>Memuat halaman...</div>}>
+          {renderPage()}
+        </Suspense>
       </main>
       {!noFooterPages.includes(currentPage) && (
         <Footer setCurrentPage={setCurrentPage} />
