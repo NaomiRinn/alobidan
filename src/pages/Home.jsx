@@ -290,7 +290,7 @@ export default function Home({ setCurrentPage, setSelectedDoctor }) {
                   <strong>WhatsApp/Telepon</strong>
                   <p>
                     <a href="https://wa.me/6281327459811" target="_blank" rel="noopener noreferrer" style={{ color: '#0f172a', textDecoration: 'none' }} onMouseOver={(e) => e.target.style.color = '#f472b6'} onMouseOut={(e) => e.target.style.color = '#0f172a'}>
-                      +62 812-3456-7890 (Bidan Eli)
+                      +62 81327459811 (Bidan Eli)
                     </a>
                   </p>
                 </div>
