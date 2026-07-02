@@ -240,7 +240,7 @@ export default function SymptomChecker({ setCurrentPage }) {
 
             <div className="step-actions">
               <button className="btn-back-step" onClick={reset}>🔄 Cek Ulang</button>
-              <a className="btn-consult-doctor" href="https://wa.me/6285640814083" target="_blank" rel="noopener noreferrer">
+              <a className="btn-consult-doctor" href="https://wa.me/6281327459811" target="_blank" rel="noopener noreferrer">
                 💬 Hubungi Bidan via WA
               </a>
             </div>

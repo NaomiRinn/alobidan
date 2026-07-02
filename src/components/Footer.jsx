@@ -35,7 +35,7 @@ export default function Footer({ setCurrentPage }) {
                 <span>Desa Bantarmangu, Kec. Cimanggu, Kab. Cilacap</span>
               </li>
               <li>
-                <a href="tel:+6285640814083">085640814083</a>
+                <a href="tel:+6281327459811">081327459811</a>
               </li>
               <li>
                 <a href="mailto:elihidayati153@gmail.com">elihidayati153@gmail.com</a>
